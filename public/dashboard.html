@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Aurora AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --white: #ffffff;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 10px;
+            height: 10px;
+            background: var(--error);
+            border-radius: 50%;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .user-menu:hover {
+            background: var(--light);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Layout */
+        .dashboard-layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: white;
+            padding: 1.5rem;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 0.5rem;
+            color: var(--gray);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--gray);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.primary { background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); }
+        .stat-icon.success { background: rgba(16, 185, 129, 0.1); }
+        .stat-icon.warning { background: rgba(245, 158, 11, 0.1); }
+        .stat-icon.error { background: rgba(239, 68, 68, 0.1); }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .stat-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .stat-change.negative {
+            color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* ICP Builder */
+        .wizard-container {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .wizard-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .wizard-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+
+        .wizard-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .wizard-step.active .step-circle {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .wizard-step.completed .step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .step-title {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .wizard-step.active .step-title {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ICP Options */
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-card {
+            padding: 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+
+        .option-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+        }
+
+        .option-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .option-title {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Country Multi-Select */
+        .country-select {
+            margin-bottom: 2rem;
+        }
+
+        .selected-countries {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .country-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--light);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .country-tag button {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        /* Lead Table */
+        .table-container {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--light);
+        }
+
+        th {
+            padding: 0.875rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        tbody tr:hover {
+            background: var(--light);
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .company-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .company-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .company-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .company-industry {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .score-high {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .score-medium {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .score-low {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .lead-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.875rem;
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.8125rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+
+        /* Search Section */
+        .search-container {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Lead Groups */
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .group-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .group-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .group-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .group-count {
+            background: var(--light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .group-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .group-stat {
+            flex: 1;
+            text-align: center;
+        }
+
+        .group-stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .group-stat-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+
+        /* Campaign Cards */
+        .campaign-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .campaign-status {
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-draft {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .campaign-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        /* Loading State */
+        .loading-spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .option-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/dashboard.html" class="logo">✨ Aurora AI</a>
+            <div class="header-right">
+                <button class="notification-btn">
+                    🔔
+                    <span class="notification-badge"></span>
+                </button>
+                <div class="user-menu" onclick="toggleUserMenu()">
+                    <div class="user-avatar" id="userAvatar">JD</div>
+                    <div>
+                        <div style="font-weight: 600;" id="userName">John Doe</div>
+                        <div style="font-size: 0.875rem; color: var(--gray);" id="userEmail">john@example.com</div>
+                    </div>
+                    <span>▼</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="nav-item active" onclick="showSection('overview')">
+                <span class="nav-icon">📊</span>
+                <span>Overview</span>
+            </div>
+            <div class="nav-item" onclick="showSection('icp-builder')">
+                <span class="nav-icon">🎯</span>
+                <span>ICP Builder</span>
+            </div>
+            <div class="nav-item" onclick="showSection('leads')">
+                <span class="nav-icon">👥</span>
+                <span>Leads</span>
+            </div>
+            <div class="nav-item" onclick="showSection('lead-groups')">
+                <span class="nav-icon">📁</span>
+                <span>Lead Groups</span>
+            </div>
+            <div class="nav-item" onclick="showSection('search')">
+                <span class="nav-icon">🔍</span>
+                <span>Smart Search</span>
+            </div>
+            <div class="nav-item" onclick="showSection('campaigns')">
+                <span class="nav-icon">📧</span>
+                <span>Campaigns</span>
+            </div>
+            <div class="nav-item" onclick="showSection('analytics')">
+                <span class="nav-icon">📈</span>
+                <span>Market Analysis</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+                <div class="nav-item" onclick="showSection('settings')">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </div>
+                <div class="nav-item" onclick="logout()">
+                    <span class="nav-icon">🚪</span>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section id="overview-section" class="content-section">
+                <div class="page-header">
+                    <h1 class="page-title">Dashboard Overview</h1>
+                    <p class="page-subtitle">Track your lead generation performance and activities</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="totalLeadsCount">0</div>
+                                <div class="stat-label">Total Leads</div>
+                            </div>
+                            <div class="stat-icon primary">👥</div>
+                        </div>
+                        <span class="stat-change positive">↑ 12% from last month</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="qualifiedLeadsCount">0</div>
+                                <div class="stat-label">Qualified Leads</div>
+                            </div>
+                            <div class="stat-icon success">✓</div>
+                        </div>
+                        <span class="stat-change positive">↑ 8% from last month</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="activeCampaignsCount">0</div>
+                                <div class="stat-label">Active Campaigns</div>
+                            </div>
+                            <div class="stat-icon warning">📧</div>
+                        </div>
+                        <span class="stat-change positive">↑ 2 new this week</span>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="conversionRate">0%</div>
+                                <div class="stat-label">Conversion Rate</div>
+                            </div>
+                            <div class="stat-icon error">📈</div>
+                        </div>
+                        <span class="stat-change negative">↓ 3% from last month</span>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Recent Activity</h2>
+                        <button class="btn btn-primary btn-sm">View All</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Type</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentActivityTable">
+                            <tr>
+                                <td>Created ICP for Technology sector</td>
+                                <td>ICP Builder</td>
+                                <td>2 hours ago</td>
+                                <td><span class="score-badge score-high">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Generated 25 new leads</td>
+                                <td>Lead Generation</td>
+                                <td>3 hours ago</td>
+                                <td><span class="score-badge score-high">Success</span></td>
+                            </tr>
+                            <tr>
+                                <td>Started email campaign</td>
+                                <td>Campaign</td>
+                                <td>Yesterday</td>
+                                <td><span class="score-badge score-medium">In Progress</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ICP Builder Section -->
+            <section id="icp-builder-section" class="content-section" style="display: none;">
+                <div class="page-header">
+                    <h1 class="page-title">Build Your Ideal Customer Profile</h1>
+                    <p class="page-subtitle">Define your perfect customer in 3 simple steps</p>
+                </div>
+
+                <div class="wizard-container">
+                    <div class="wizard-steps">
+                        <div class="wizard-step active" id="step1">
+                            <div class="step-circle">1</div>
+                            <div class="step-title">Industry & Sector</div>
+                        </div>
+                        <div class="wizard-step" id="step2">
+                            <div class="step-circle">2</div>
+                            <div class="step-title">Location & Region</div>
+                        </div>
+                        <div class="wizard-step" id="step3">
+                            <div class="step-circle">3</div>
+                            <div class="step-title">Business Details</div>
+                        </div>
+                    </div>
+
+                    <div id="stepContent">
+                        <!-- Step 1: Industry -->
+                        <div id="step1Content">
+                            <h3 style="margin-bottom: 1.5rem;">Select Your Target Industries</h3>
+                            <div class="option-grid">
+                                <div class="option-card" onclick="selectOption(this, 'industry', 'Technology')">
+                                    <div class="option-icon">💻</div>
+                                    <div class="option-title">Technology</div>
+                                </div>
+                                <div class="option-card" onclick="selectOption(this, 'industry', 'Manufacturing')">
+                                    <div class="option-icon">🏭</div>
+                                    <div class="option-title">Manufacturing</div>
+                                </div>
+                                <div class="option-card" onclick="selectOption(this, 'industry', 'Textile')">
+                                    <div class="option-icon">🧵</div>
+                                    <div class="option-title">Textile</div>
+                                </div>
+                                <div class="option-card" onclick="selectOption(this, 'industry', 'Agriculture')">
+                                    <div class="option-icon">🌾</div>
+                                    <div class="option-title">Agriculture</div>
+                                </div>
+                                <div class="option-card" onclick="selectOption(this, 'industry', 'Healthcare')">
+                                    <div class="option-icon">🏥</div>
+                                    <div class="option-title">Healthcare</div>
+                                </div>
+                                <div class="option-card" onclick="selectOption(this, 'industry', 'Finance')">
+                                    <div class="option-icon">💰</div>
+                                    <div class="option-title">Finance</div>
+                                </div>
+                                <div class="option-card" onclick="selectOption(this, 'industry', 'Education')">
+                                    <div class="option-icon">🎓</div>
+                                    <div class="option-title">Education</div>
+                                </div>
+                                <div class="option-card" onclick="selectOption(this, 'industry', 'Sports')">
+                                    <div class="option-icon">⚽</div>
+                                    <div class="option-title">Sports & Fitness</div>
+                                </div>
+                                <div class="option-card" onclick="selectOption(this, 'industry', 'Retail')">
+                                    <div class="option-icon">🛍️</div>
+                                    <div class="option-title">Retail</div>
+                                </div>
+                                <div class="option-card" onclick="selectOption(this, 'industry', 'Real Estate')">
+                                    <div class="option-icon">🏢</div>
+                                    <div class="option-title">Real Estate</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+                        <button class="btn btn-secondary" id="prevBtn" onclick="previousStep()" style="display: none;">Previous</button>
+                        <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Next Step</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Leads Section -->
+            <section id="leads-section" class="content-section" style="display: none;">
+                <div class="page-header">
+                    <h1 class="page-title">All Leads</h1>
+                    <p class="page-subtitle">Manage and track all your generated leads</p>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Lead Database</h2>
+                        <div class="table-actions">
+                            <button class="btn btn-secondary btn-sm">Export</button>
+                            <button class="btn btn-primary btn-sm" onclick="showSection('icp-builder')">Generate New Leads</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Location</th>
+                                <th>Employees</th>
+                                <th>Score</th>
+                                <th>Contact</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leadsTable">
+                            <!-- Leads will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Lead Groups Section -->
+            <section id="lead-groups-section" class="content-section" style="display: none;">
+                <div class="page-header">
+                    <h1 class="page-title">Lead Groups</h1>
+                    <p class="page-subtitle">Organize your leads into targeted groups</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <button class="btn btn-primary" onclick="showCreateGroupModal()">+ Create New Group</button>
+                </div>
+
+                <div class="groups-grid" id="leadGroupsGrid">
+                    <!-- Groups will be populated here -->
+                </div>
+            </section>
+
+            <!-- Smart Search Section -->
+            <section id="search-section" class="content-section" style="display: none;">
+                <div class="page-header">
+                    <h1 class="page-title">Smart Lead Search</h1>
+                    <p class="page-subtitle">Use AI to find your perfect leads</p>
+                </div>
+
+                <div class="search-container">
+                    <div class="search-form">
+                        <input type="text" class="search-input" id="smartSearchInput" 
+                               placeholder="Describe your ideal lead (e.g., 'Tech companies in Pakistan with 50+ employees working in AI')">
+                        <button class="btn btn-primary" onclick="performSmartSearch()">Search</button>
+                    </div>
+                    <div class="search-filters">
+                        <select class="filter-select" id="industryFilter">
+                            <option value="">All Industries</option>
+                            <option value="technology">Technology</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="textile">Textile</option>
+                            <option value="healthcare">Healthcare</option>
+                        </select>
+                        <select class="filter-select" id="regionFilter">
+                            <option value="">All Regions</option>
+                            <option value="asia">Asia</option>
+                            <option value="north-america">North America</option>
+                            <option value="europe">Europe</option>
+                            <option value="middle-east">Middle East</option>
+                        </select>
+                        <select class="filter-select" id="sizeFilter">
+                            <option value="">Company Size</option>
+                            <option value="1-50">1-50 employees</option>
+                            <option value="51-200">51-200 employees</option>
+                            <option value="201-500">201-500 employees</option>
+                            <option value="500+">500+ employees</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="searchResults"></div>
+            </section>
+
+            <!-- Campaigns Section -->
+            <section id="campaigns-section" class="content-section" style="display: none;">
+                <div class="page-header">
+                    <h1 class="page-title">Email Campaigns</h1>
+                    <p class="page-subtitle">Create and manage your outreach campaigns</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <button class="btn btn-primary">+ Create New Campaign</button>
+                </div>
+
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <div>
+                            <h3>Q1 Technology Outreach</h3>
+                            <p style="color: var(--gray); margin-top: 0.25rem;">Targeting 500 tech companies</p>
+                        </div>
+                        <span class="campaign-status status-active">Active</span>
+                    </div>
+                    <div class="campaign-metrics">
+                        <div class="metric">
+                            <div class="metric-value">2,847</div>
+                            <div class="metric-label">Emails Sent</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">42%</div>
+                            <div class="metric-label">Open Rate</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">12%</div>
+                            <div class="metric-label">Click Rate</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">28</div>
+                            <div class="metric-label">Replies</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <div>
+                            <h3>Manufacturing Partnership Drive</h3>
+                            <p style="color: var(--gray); margin-top: 0.25rem;">B2B manufacturing companies</p>
+                        </div>
+                        <span class="campaign-status status-draft">Draft</span>
+                    </div>
+                    <div class="campaign-metrics">
+                        <div class="metric">
+                            <div class="metric-value">0</div>
+                            <div class="metric-label">Emails Sent</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">250</div>
+                            <div class="metric-label">Recipients</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">--</div>
+                            <div class="metric-label">Open Rate</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">--</div>
+                            <div class="metric-label">Click Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Market Analysis Section -->
+            <section id="analytics-section" class="content-section" style="display: none;">
+                <div class="page-header">
+                    <h1 class="page-title">Market Analysis</h1>
+                    <p class="page-subtitle">Competitive intelligence and market insights</p>
+                </div>
+
+                <div class="search-container">
+                    <h3 style="margin-bottom: 1rem;">Competitor Analysis</h3>
+                    <div class="search-form">
+                        <input type="url" class="search-input" placeholder="Enter competitor website URL (e.g., https://competitor.com)">
+                        <button class="btn btn-primary">Analyze</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid" style="margin-top: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">12</div>
+                                <div class="stat-label">Competitors Tracked</div>
+                            </div>
+                            <div class="stat-icon primary">🎯</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">$2.5M</div>
+                                <div class="stat-label">Market Opportunity</div>
+                            </div>
+                            <div class="stat-icon success">💰</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">85%</div>
+                                <div class="stat-label">Market Fit Score</div>
+                            </div>
+                            <div class="stat-icon warning">📊</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value">3.2x</div>
+                                <div class="stat-label">Growth Potential</div>
+                            </div>
+                            <div class="stat-icon error">🚀</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="content-section" style="display: none;">
+                <div class="page-header">
+                    <h1 class="page-title">Settings</h1>
+                    <p class="page-subtitle">Manage your account and preferences</p>
+                </div>
+
+                <div class="wizard-container">
+                    <h3>Account Settings</h3>
+                    <p>Configure your Aurora AI account settings here.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div class="modal" id="createGroupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Lead Group</h2>
+                <button class="modal-close" onclick="closeModal('createGroupModal')">×</button>
+            </div>
+            <form onsubmit="createLeadGroup(event)">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Group Name</label>
+                    <input type="text" class="search-input" placeholder="e.g., Hot Prospects Q1" required>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Description</label>
+                    <textarea class="search-input" rows="3" placeholder="Describe this group..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Group</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global State
+        let currentUser = null;
+        let currentStep = 1;
+        let icpData = {
+            industry: null,
+            region: null,
+            countries: [],
+            businessType: null,
+            companySize: null,
+            leadCount: 10
+        };
+        let allLeads = [];
+        let leadGroups = [];
+
+        // Initialize Dashboard
+        window.addEventListener('load', () => {
+            const user = localStorage.getItem('user');
+            if (!user) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(user);
+            document.getElementById('userName').textContent = currentUser.name || 'User';
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('userAvatar').textContent = (currentUser.name || 'U').substring(0, 2).toUpperCase();
+            
+            loadDashboardData();
+            loadLeads();
+            loadLeadGroups();
+        });
+
+        // Dashboard Data
+        function loadDashboardData() {
+            // Simulate loading data
+            setTimeout(() => {
+                document.getElementById('totalLeadsCount').textContent = '2,847';
+                document.getElementById('qualifiedLeadsCount').textContent = '892';
+                document.getElementById('activeCampaignsCount').textContent = '5';
+                document.getElementById('conversionRate').textContent = '12.5%';
+            }, 500);
+        }
+
+        // Section Navigation
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(sec => {
+                sec.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(`${section}-section`).style.display = 'block';
+            
+            // Update sidebar
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        // ICP Builder Functions
+        function selectOption(element, type, value) {
+            if (type === 'industry') {
+                // Allow multiple selection for industries
+                element.classList.toggle('selected');
+                if (element.classList.contains('selected')) {
+                    if (!icpData.industry) icpData.industry = [];
+                    if (Array.isArray(icpData.industry)) {
+                        icpData.industry.push(value);
+                    }
+                } else {
+                    if (Array.isArray(icpData.industry)) {
+                        icpData.industry = icpData.industry.filter(i => i !== value);
+                    }
+                }
+            } else {
+                // Single selection for other options
+                element.parentElement.querySelectorAll('.option-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                element.classList.add('selected');
+                icpData[type] = value;
+            }
+        }
+
+        function nextStep() {
+            if (currentStep === 1 && !icpData.industry) {
+                alert('Please select at least one industry');
+                return;
+            }
+            
+            if (currentStep < 3) {
+                currentStep++;
+                updateStepUI();
+            } else {
+                generateLeads();
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepUI();
+            }
+        }
+
+        function updateStepUI() {
+            // Update step indicators
+            document.querySelectorAll('.wizard-step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            const content = document.getElementById('stepContent');
+            
+            if (currentStep === 2) {
+                // Step 2: Location
+                content.innerHTML = `
+                    <div id="step2Content">
+                        <h3 style="margin-bottom: 1.5rem;">Select Target Regions & Countries</h3>
+                        <div class="option-grid">
+                            <div class="option-card" onclick="selectOption(this, 'region', 'Asia')">
+                                <div class="option-icon">🌏</div>
+                                <div class="option-title">Asia</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'region', 'North America')">
+                                <div class="option-icon">🌎</div>
+                                <div class="option-title">North America</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'region', 'Europe')">
+                                <div class="option-icon">🌍</div>
+                                <div class="option-title">Europe</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'region', 'Middle East')">
+                                <div class="option-icon">🏜️</div>
+                                <div class="option-title">Middle East</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'region', 'Africa')">
+                                <div class="option-icon">🌍</div>
+                                <div class="option-title">Africa</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'region', 'South America')">
+                                <div class="option-icon">🌎</div>
+                                <div class="option-title">South America</div>
+                            </div>
+                        </div>
+                        
+                        <div class="country-select">
+                            <h4 style="margin: 1.5rem 0 1rem;">Specific Countries (Optional)</h4>
+                            <select class="search-input" onchange="addCountry(this.value)" style="width: auto;">
+                                <option value="">Select countries...</option>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="India">India</option>
+                                <option value="Bangladesh">Bangladesh</option>
+                                <option value="UAE">UAE</option>
+                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                <option value="USA">USA</option>
+                                <option value="UK">UK</option>
+                                <option value="Germany">Germany</option>
+                                <option value="China">China</option>
+                                <option value="Japan">Japan</option>
+                            </select>
+                            <div class="selected-countries" id="selectedCountries"></div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('prevBtn').style.display = 'block';
+                
+            } else if (currentStep === 3) {
+                // Step 3: Business Details
+                content.innerHTML = `
+                    <div id="step3Content">
+                        <h3 style="margin-bottom: 1.5rem;">Business Type & Size</h3>
+                        
+                        <h4 style="margin-bottom: 1rem;">Business Type</h4>
+                        <div class="option-grid" style="margin-bottom: 2rem;">
+                            <div class="option-card" onclick="selectOption(this, 'businessType', 'B2B Services')">
+                                <div class="option-icon">🤝</div>
+                                <div class="option-title">B2B Services</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'businessType', 'SaaS')">
+                                <div class="option-icon">☁️</div>
+                                <div class="option-title">SaaS</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'businessType', 'Industrial')">
+                                <div class="option-icon">⚙️</div>
+                                <div class="option-title">Industrial</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'businessType', 'Digital Products')">
+                                <div class="option-icon">📱</div>
+                                <div class="option-title">Digital Products</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'businessType', 'Consulting')">
+                                <div class="option-icon">💼</div>
+                                <div class="option-title">Consulting</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'businessType', 'Distribution')">
+                                <div class="option-icon">🚚</div>
+                                <div class="option-title">Distribution</div>
+                            </div>
+                        </div>
+                        
+                        <h4 style="margin-bottom: 1rem;">Company Size</h4>
+                        <div class="option-grid" style="margin-bottom: 2rem;">
+                            <div class="option-card" onclick="selectOption(this, 'companySize', '1-50')">
+                                <div class="option-icon">🏠</div>
+                                <div class="option-title">1-50</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'companySize', '51-200')">
+                                <div class="option-icon">🏢</div>
+                                <div class="option-title">51-200</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'companySize', '201-500')">
+                                <div class="option-icon">🏗️</div>
+                                <div class="option-title">201-500</div>
+                            </div>
+                            <div class="option-card" onclick="selectOption(this, 'companySize', '500+')">
+                                <div class="option-icon">🏙️</div>
+                                <div class="option-title">500+</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Number of leads to generate:</label>
+                            <select class="filter-select" onchange="icpData.leadCount = this.value" style="width: 200px;">
+                                <option value="5">5 Leads</option>
+                                <option value="10" selected>10 Leads</option>
+                                <option value="25">25 Leads</option>
+                                <option value="50">50 Leads</option>
+                                <option value="100">100 Leads</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('nextBtn').textContent = '✨ Generate Leads';
+            }
+        }
+
+        function addCountry(country) {
+            if (!country || icpData.countries.includes(country)) return;
+            
+            icpData.countries.push(country);
+            updateCountryDisplay();
+        }
+
+        function removeCountry(country) {
+            icpData.countries = icpData.countries.filter(c => c !== country);
+            updateCountryDisplay();
+        }
+
+        function updateCountryDisplay() {
+            const container = document.getElementById('selectedCountries');
+            if (!container) return;
+            
+            container.innerHTML = icpData.countries.map(country => `
+                <div class="country-tag">
+                    ${country}
+                    <button onclick="removeCountry('${country}')">×</button>
+                </div>
+            `).join('');
+        }
+
+        async function generateLeads() {
+            if (!icpData.businessType || !icpData.region) {
+                alert('Please complete all steps');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('stepContent').innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <div class="loading-spinner"></div>
+                    <h3 style="margin-top: 1rem;">Generating ${icpData.leadCount} qualified leads...</h3>
+                    <p style="color: var(--gray);">Using GPT-5 to find perfect matches</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/leads/generate', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(icpData)
+                });
+
+                const leads = await response.json();
+                displayGeneratedLeads(leads);
+            } catch (error) {
+                // Use mock data for demo
+                const mockLeads = generateMockLeads();
+                displayGeneratedLeads(mockLeads);
+            }
+        }
+
+        function generateMockLeads() {
+            const companies = [
+                { name: 'TechVentures Pakistan', location: 'Karachi, Pakistan', employees: '50-100', industry: icpData.industry?.[0] || 'Technology', email: 'contact@techventures.pk', phone: '+92-21-1234567' },
+                { name: 'Digital Solutions Asia', location: 'Lahore, Pakistan', employees: '100-250', industry: icpData.industry?.[0] || 'Technology', email: 'info@digitalsolutions.asia', phone: '+92-42-7654321' },
+                { name: 'Innovation Hub PK', location: 'Islamabad, Pakistan', employees: '25-50', industry: icpData.industry?.[0] || 'Technology', email: 'hello@innovationhub.pk', phone: '+92-51-9876543' },
+                { name: 'Smart Systems Ltd', location: 'Sialkot, Pakistan', employees: '250-500', industry: 'Manufacturing', email: 'sales@smartsystems.com', phone: '+92-52-4567890' },
+                { name: 'Future Tech Industries', location: 'Faisalabad, Pakistan', employees: '100-250', industry: icpData.industry?.[0] || 'Technology', email: 'business@futuretech.pk', phone: '+92-41-3216549' },
+                { name: 'Global Connect Solutions', location: 'Dubai, UAE', employees: '500+', industry: 'Services', email: 'contact@globalconnect.ae', phone: '+971-4-1234567' },
+                { name: 'Asia Pacific Ventures', location: 'Singapore', employees: '100-250', industry: 'Finance', email: 'info@apventures.sg', phone: '+65-6789-1234' },
+                { name: 'NextGen Innovations', location: 'Bengaluru, India', employees: '200-500', industry: 'Technology', email: 'hello@nextgen.in', phone: '+91-80-4567890' },
+                { name: 'Cloud Dynamics Corp', location: 'Mumbai, India', employees: '50-100', industry: 'SaaS', email: 'sales@clouddynamics.in', phone: '+91-22-9876543' },
+                { name: 'Enterprise Solutions ME', location: 'Riyadh, Saudi Arabia', employees: '500+', industry: 'Enterprise', email: 'info@enterprise.sa', phone: '+966-11-1234567' }
+            ];
+
+            return companies.slice(0, parseInt(icpData.leadCount)).map(company => ({
+                ...company,
+                score: Math.floor(Math.random() * 20) + 80,
+                description: `Leading ${company.industry.toLowerCase()} company specializing in innovative solutions`
+            }));
+        }
+
+        function displayGeneratedLeads(leads) {
+            allLeads = [...allLeads, ...leads];
+            
+            const leadsHTML = leads.map(lead => `
+                <tr>
+                    <td>
+                        <div class="company-info">
+                            <div class="company-logo">${lead.name.substring(0, 2).toUpperCase()}</div>
+                            <div class="company-details">
+                                <div class="company-name">${lead.name}</div>
+                                <div class="company-industry">${lead.industry}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${lead.location}</td>
+                    <td>${lead.employees}</td>
+                    <td><span class="score-badge ${lead.score >= 85 ? 'score-high' : 'score-medium'}">${lead.score}%</span></td>
+                    <td>
+                        <div style="font-size: 0.875rem;">
+                            <div>${lead.email}</div>
+                            <div style="color: var(--gray);">${lead.phone}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lead-actions">
+                            <button class="btn btn-sm btn-primary" onclick="sendEmail('${lead.email}')">📧 Email</button>
+                            <button class="btn btn-sm btn-secondary" onclick="viewProfile('${lead.name}')">View</button>
+                            <button class="btn btn-sm btn-secondary" onclick="saveLead('${lead.name}')">Save</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('stepContent').innerHTML = `
+                <div>
+                    <h3 style="margin-bottom: 1rem;">✅ Successfully Generated ${leads.length} Qualified Leads!</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Location</th>
+                                    <th>Employees</th>
+                                    <th>Score</th>
+                                    <th>Contact</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>${leadsHTML}</tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn btn-primary" onclick="resetICP()">Create New ICP</button>
+                        <button class="btn btn-secondary" onclick="showSection('leads')">View All Leads</button>
+                    </div>
+                </div>
+            `;
+            
+            // Update leads table
+            loadLeads();
+        }
+
+        function loadLeads() {
+            const leadsTable = document.getElementById('leadsTable');
+            if (!leadsTable) return;
+            
+            if (allLeads.length === 0) {
+                leadsTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--gray);">
+                            No leads yet. Create an ICP to generate leads.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            leadsTable.innerHTML = allLeads.map(lead => `
+                <tr>
+                    <td>
+                        <div class="company-info">
+                            <div class="company-logo">${lead.name.substring(0, 2).toUpperCase()}</div>
+                            <div class="company-details">
+                                <div class="company-name">${lead.name}</div>
+                                <div class="company-industry">${lead.industry}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${lead.location}</td>
+                    <td>${lead.employees}</td>
+                    <td><span class="score-badge ${lead.score >= 85 ? 'score-high' : lead.score >= 70 ? 'score-medium' : 'score-low'}">${lead.score}%</span></td>
+                    <td>
+                        <div style="font-size: 0.875rem;">
+                            <div>${lead.email}</div>
+                            <div style="color: var(--gray);">${lead.phone}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="lead-actions">
+                            <button class="btn btn-sm btn-primary" onclick="sendEmail('${lead.email}')">📧</button>
+                            <button class="btn btn-sm btn-secondary" onclick="viewProfile('${lead.name}')">View</button>
+                            <button class="btn btn-sm btn-secondary" onclick="saveLead('${lead.name}')">Save</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadLeadGroups() {
+            const groupsGrid = document.getElementById('leadGroupsGrid');
+            if (!groupsGrid) return;
+            
+            if (leadGroups.length === 0) {
+                leadGroups = [
+                    { name: 'Hot Prospects', count: 12, avgScore: 92, status: 'active' },
+                    { name: 'Q1 Targets', count: 45, avgScore: 85, status: 'active' },
+                    { name: 'Technology Sector', count: 78, avgScore: 78, status: 'paused' }
+                ];
+            }
+            
+            groupsGrid.innerHTML = leadGroups.map(group => `
+                <div class="group-card">
+                    <div class="group-header">
+                        <h3 class="group-title">${group.name}</h3>
+                        <span class="group-count">${group.count} leads</span>
+                    </div>
+                    <p style="color: var(--gray); margin: 0.5rem 0;">Click to view and manage leads in this group</p>
+                    <div class="group-stats">
+                        <div class="group-stat">
+                            <div class="group-stat-value">${group.avgScore}%</div>
+                            <div class="group-stat-label">Avg Score</div>
+                        </div>
+                        <div class="group-stat">
+                            <div class="group-stat-value">${group.status === 'active' ? '✓' : '⏸'}</div>
+                            <div class="group-stat-label">Status</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Action Functions
+        function sendEmail(email) {
+            window.location.href = `mailto:${email}`;
+        }
+
+        function viewProfile(companyName) {
+            alert(`Viewing profile for ${companyName}\n\nDetailed company information would be displayed here.`);
+        }
+
+        function saveLead(companyName) {
+            alert(`${companyName} has been saved to your leads!\n\nYou can organize it into groups from the Lead Groups section.`);
+        }
+
+        function resetICP() {
+            currentStep = 1;
+            icpData = {
+                industry: null,
+                region: null,
+                countries: [],
+                businessType: null,
+                companySize: null,
+                leadCount: 10
+            };
+            updateStepUI();
+            location.reload();
+        }
+
+        // Smart Search
+        async function performSmartSearch() {
+            const query = document.getElementById('smartSearchInput').value;
+            const industry = document.getElementById('industryFilter').value;
+            const region = document.getElementById('regionFilter').value;
+            const size = document.getElementById('sizeFilter').value;
+            
+            if (!query && !industry && !region && !size) {
+                alert('Please enter search criteria or select filters');
+                return;
+            }
+            
+            document.getElementById('searchResults').innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div class="loading-spinner"></div>
+                    <p>Searching with AI...</p>
+                </div>
+            `;
+            
+            // Simulate search
+            setTimeout(() => {
+                const results = generateMockLeads().slice(0, 5);
+                displaySearchResults(results);
+            }, 2000);
+        }
+
+        function displaySearchResults(results) {
+            const resultsHTML = results.map(lead => `
+                <div style="background: white; padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <h3>${lead.name}</h3>
+                            <p style="color: var(--gray); margin: 0.5rem 0;">${lead.description}</p>
+                            <div style="display: flex; gap: 2rem; margin-top: 1rem;">
+                                <span>📍 ${lead.location}</span>
+                                <span>👥 ${lead.employees}</span>
+                                <span>📧 ${lead.email}</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="score-badge score-high">${lead.score}% Match</span>
+                            <div style="margin-top: 1rem;">
+                                <button class="btn btn-sm btn-primary" onclick="sendEmail('${lead.email}')">Contact</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('searchResults').innerHTML = `
+                <h3 style="margin: 2rem 0 1rem;">Found ${results.length} matching leads</h3>
+                ${resultsHTML}
+            `;
+        }
+
+        // Modal Functions
+        function showCreateGroupModal() {
+            document.getElementById('createGroupModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function createLeadGroup(event) {
+            event.preventDefault();
+            // Add group creation logic here
+            closeModal('createGroupModal');
+            loadLeadGroups();
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login.html';
+        }
+
+        // User Menu
+        function toggleUserMenu() {
+            // Implement user menu dropdown
+        }
+    </script>
+</body>
+</html>
