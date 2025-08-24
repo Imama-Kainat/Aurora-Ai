@@ -29,7 +29,7 @@ Aurora AI is a cutting-edge B2B lead generation platform that leverages GPT-5's 
 ### **🏆 Hackathon Submission**
 - **Event:** GPT-5 Hackathon 2025
 - **Category:** AI-Powered Business Solutions
-- **Team:** [Your Team Name]
+- **Team:** Btaji Crew
 - **Demo:** [Live Demo Link](https://your-deployment.vercel.app)
 
 ---
