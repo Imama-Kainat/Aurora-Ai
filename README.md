@@ -1,6 +1,3 @@
-# 📚 **Complete README.md for Aurora AI GitHub Repository**
-
-```markdown
 # ✨ Aurora AI - Intelligent B2B Lead Generation Platform
 
 <div align="center">
