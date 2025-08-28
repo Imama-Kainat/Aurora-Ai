@@ -13,12 +13,13 @@
 </div>
 
 <div align="center">
-  <a href="#demo">View Demo</a> •
+  <a href="https://youtu.be/urp_kds2hgk" target="_blank">View Demo</a> •
   <a href="#features">Features</a> •
   <a href="#installation">Installation</a> •
   <a href="#api-docs">API Docs</a> •
   <a href="#deployment">Deployment</a>
 </div>
+
 
 ---
 
@@ -30,7 +31,7 @@ Aurora AI is a cutting-edge B2B lead generation platform that leverages GPT-5's 
 - **Event:** GPT-5 Hackathon 2025
 - **Category:** AI-Powered Business Solutions
 - **Team:** Btaji Crew
-- **Demo:** [Live Demo Link](https://your-deployment.vercel.app)
+- **Demo:** [Live Demo Link](https://aurora-ai-psi.vercel.app/)
 
 ---
 
@@ -474,7 +475,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Email:** team@aurora-ai.com
 - **GitHub Issues:** [Report Bug](https://github.com/yourusername/aurora-ai/issues)
-- **Demo:** [Live Application](https://aurora-ai.vercel.app)
+- **Demo:** [Live Application](https://aurora-ai-psi.vercel.app/)
 - **Documentation:** [Full Docs](https://aurora-ai.com/docs)
 
 ---
@@ -487,7 +488,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
   <h3>🏆 Built for GPT-5 Hackathon 2025</h3>
-  <p>Made with ❤️ by [Your Team Name]</p>
+  <p>Made with ❤️ </p>
   <p>
     <a href="https://github.com/yourusername/aurora-ai/stargazers">⭐ Star this repo</a> •
     <a href="https://github.com/yourusername/aurora-ai/fork">🍴 Fork it</a> •
