@@ -1,7 +1,7 @@
 <p align="center">
   <img src="logo.JPG" alt="Aurora AI Logo" width="100%"/>
 </p>
-# ✨ Aurora AI - Intelligent B2B Lead Generation Platform
+
 
 <div align="center">
   <img src="https://img.shields.io/badge/GPT--5-Powered-blueviolet?style=for-the-badge" alt="GPT-5 Powered">
