@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.jpg" alt="Aurora AI Logo" width="150" height="150"/>
+  <img src="logo.JPG" alt="Aurora AI Logo" width="150" height="150"/>
 </p>
 # ✨ Aurora AI - Intelligent B2B Lead Generation Platform
 
